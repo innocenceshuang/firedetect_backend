@@ -7,8 +7,18 @@ class DeviceInfoSerializer(serializers.ModelSerializer):
         model = DeviceInfo
         fields = '__all__'
 
+class DeviceDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeviceInfo
+        fields = ['device_id','sensitive']
+
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
-        fields = ['device_id', 'text', 'timestamp']
+        fields = ['id', 'device_id', 'text', 'timestamp','dealed']
+
+class MessageDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = ['id','dealed']
 

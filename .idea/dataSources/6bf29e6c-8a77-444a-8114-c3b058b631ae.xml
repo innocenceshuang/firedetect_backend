@@ -1424,50 +1424,50 @@ model</ColNames>
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="399" parent="296" name="horizon">
+    <column id="399" parent="296" name="status">
       <Position>2</Position>
-      <DataType>double|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="400" parent="296" name="vertical">
-      <Position>3</Position>
-      <DataType>double|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="401" parent="296" name="status">
-      <Position>4</Position>
       <DataType>varchar(20)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="402" parent="296" name="video_addr">
-      <Position>5</Position>
+    <column id="400" parent="296" name="video_addr">
+      <Position>3</Position>
       <DataType>varchar(50)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="403" parent="296" name="PRIMARY">
+    <column id="401" parent="296" name="location">
+      <Position>4</Position>
+      <DataType>varchar(100)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="402" parent="296" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>device_id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="404" parent="297" name="id">
+    <column id="403" parent="297" name="id">
       <Position>1</Position>
       <DataType>bigint|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="405" parent="297" name="text">
+    <column id="404" parent="297" name="text">
       <Position>2</Position>
       <DataType>varchar(50)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="406" parent="297" name="device_id">
+    <column id="405" parent="297" name="device_id">
       <Position>3</Position>
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="407" parent="297" name="timestamp">
+    <column id="406" parent="297" name="timestamp">
       <Position>4</Position>
       <DataType>datetime(6)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="407" parent="297" name="dealed">
+      <Position>5</Position>
+      <DataType>tinyint(1)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
     <index id="408" parent="297" name="fire_message_device_id_bb128cd2_fk_fire_deviceinfo_device_id">
