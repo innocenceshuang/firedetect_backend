@@ -116,11 +116,13 @@ def MessageAccount(request):
 communication = redis.Redis(host='39.101.200.0', port=6379, db=0, password='Wrj145325' )
 
 statuses = {}
+lastmesses = {}
 
 # 计数，6次调用报警
 count = 0
 
 def updateStatus():
+    global statuses
     print(time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime()),end=' ')
     print("sync")
     # 当前监控的所有设备
@@ -130,6 +132,12 @@ def updateStatus():
         print("device {id} updated".format(id=device))
         # 同步设备状态
         state = communication.get(device).decode('utf-8')
+        if device in statuses.keys():
+            statuses[device].append(state)
+        else:
+            statuses[device] = []
+            statuses[device].append(state)
+
         origin = DeviceInfo.objects.get(device_id=device)
         DeviceInfo.objects.filter(device_id=device).update(status=state)
         # 保活
@@ -137,7 +145,8 @@ def updateStatus():
     global count
     count = count+1
     if count==6:
-        addWarningMessage()
+        addWarningMessage(devices)
+        statuses = {}
         count = 0
         # 调用报警
         # if state=='onfire':
@@ -145,8 +154,40 @@ def updateStatus():
         # elif state!=origin.status:
         #     Message.objects.create(text='Device 1 '+ state, device_id=device)
 
-def addWarningMessage():
-    abc = 0
+
+def addWarningMessage(devices):
+    for device in devices:
+        device = device['device_id']
+        sensitive = DeviceInfo.objects.get(device_id=device).sensitive
+        convert=[0,0,0]
+        fire = 0
+        fireflag = False
+        performances=statuses[device]
+        for performance in performances:
+            if performance=='onfire':
+                fire+=1
+        if sensitive == 1:
+            if fire>=4:
+                fireflag=True
+
+        elif sensitive == 2:
+            if fire>=3:
+                fireflag=True
+        else:
+            if fire>=2:
+                fireflag=True
+
+        if fireflag==True:
+            Message.objects.create(text='Area '+device+' onfire.')
+            lastmesses[device] = 'onfire'
+        elif performances[-1]=='offline':
+            if device in lastmesses.keys():
+                if lastmesses[device] != 'offline':
+                    Message.objects.create(text='Device ' + device + ' offline.')
+            lastmesses[device] = 'offline'
+        else:
+            lastmesses[device] = 'online'
+
 
 try:
     scheduler = BackgroundScheduler()

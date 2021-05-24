@@ -9,7 +9,7 @@ class DeviceInfo(models.Model):
     location = models.CharField(max_length=100,default='unknown')
     status = models.CharField(max_length=20,default='offline') # choices=('onfire','online','offline')
     video_addr = models.CharField(max_length=50)
-    sensitive = models.IntegerField(default=2)
+    sensitive = models.IntegerField (default=2)
 
     def __str__(self):
         return self.device_id
