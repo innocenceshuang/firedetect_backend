@@ -15,6 +15,7 @@ from apscheduler.triggers.cron import CronTrigger
 from django_apscheduler.jobstores import DjangoJobStore
 import redis
 
+from .sendMessage import sendMessages
 from .models import DeviceInfo,Message
 from .serializers import DeviceInfoSerializer,MessageSerializer,DeviceDetailSerializer,MessageDetailSerializer
 # Create your views here.
@@ -156,6 +157,7 @@ def updateStatus():
 
 
 def addWarningMessage(devices):
+    firedevices = []
     for device in devices:
         device = device['device_id']
         sensitive = DeviceInfo.objects.get(device_id=device).sensitive
@@ -179,6 +181,7 @@ def addWarningMessage(devices):
 
         if fireflag==True:
             Message.objects.create(text='Area '+device+' onfire.')
+            firedevices.append(str(device))
             lastmesses[device] = 'onfire'
         elif performances[-1]=='offline':
             if device in lastmesses.keys():
@@ -188,6 +191,8 @@ def addWarningMessage(devices):
         else:
             lastmesses[device] = 'online'
 
+    if len(firedevices)!=0:
+        sendMessages(firedevices)
 
 try:
     scheduler = BackgroundScheduler()
